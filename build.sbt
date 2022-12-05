@@ -5,7 +5,7 @@ lazy val `mixql-server-main` = project
   .enablePlugins(JavaAppPackaging)
   .settings(
     run / fork := true,
-    name := "mixql-cluster-main",
+    name := "mixql-cluster",
     organization := "org.mixql",
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
