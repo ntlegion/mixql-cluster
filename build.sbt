@@ -9,9 +9,6 @@ lazy val `mixql-server-main` = project
     organization := "org.mixql",
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
-    Compile / PB.targets := Seq(
-      scalapb.gen(grpc = true) -> (Compile / sourceManaged).value,
-    ),
     libraryDependencies ++= {
       val vScallop = "4.1.0"
       Seq(
@@ -22,7 +19,8 @@ lazy val `mixql-server-main` = project
         "com.thesamet.scalapb.common-protos" %% "proto-google-common-protos-scalapb_0.11" % "2.9.6-0" % "protobuf",
         "com.thesamet.scalapb.common-protos" %% "proto-google-common-protos-scalapb_0.11" % "2.9.6-0",
         "org.zeromq" % "jeromq" % "0.5.2",
-        "org.mixql" %% "mixql-core" % "0.1.0-SNAPSHOT"
+        "org.mixql" %% "mixql-core" % "0.1.0-SNAPSHOT",
+        "org.mixql" %% "mixql-protobuf" % "0.1.0-SNAPSHOT"
       )
     }
   )
