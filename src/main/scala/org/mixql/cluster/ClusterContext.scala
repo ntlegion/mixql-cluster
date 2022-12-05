@@ -1,8 +1,11 @@
+package org.mixql.cluster
+
 import org.mixql.core.context.Context
 import org.mixql.core.context.gtype.Type
 import org.mixql.core.engine.Engine
 import org.mixql.core.function.{ArrayFunction, StringFunction}
-import scala.collection.mutable.{Map => MutMap}
+
+import scala.collection.mutable.Map as MutMap
 
 class ClusterContext(
                       engines: MutMap[String, Engine],

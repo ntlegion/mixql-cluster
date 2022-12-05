@@ -1,3 +1,5 @@
+package org.mixql.cluster
+
 import org.zeromq.{SocketType, ZMQ}
 
 import scala.collection.mutable

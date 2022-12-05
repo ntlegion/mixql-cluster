@@ -1,3 +1,5 @@
+package org.mixql.cluster
+
 import java.io.File
 import scala.language.postfixOps
 import scala.sys.process.Process
@@ -5,7 +7,7 @@ import scala.sys.process.Process
 object CmdOperations {
 
   def runCmdWaiting(cmdWindows: Option[String], cmdUnix: Option[String], path: File): String = {
-    import scala.sys.process._
+    import scala.sys.process.*
     val isWindows: Boolean = System.getProperty("os.name").toLowerCase().contains("win")
     try {
       if (isWindows && cmdWindows.nonEmpty) {
@@ -26,7 +28,7 @@ object CmdOperations {
   }
 
   def runCmdNoWait(cmdWindows: Option[String], cmdUnix: Option[String], path: File): Process =
-    import scala.sys.process._
+    import scala.sys.process.*
     val isWindows: Boolean = System.getProperty("os.name").toLowerCase().contains("win")
     try {
       if (isWindows && cmdWindows.nonEmpty) {

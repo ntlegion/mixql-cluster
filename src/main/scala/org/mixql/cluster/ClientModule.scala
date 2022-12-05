@@ -1,14 +1,14 @@
+package org.mixql.cluster
 
 import org.mixql.core.context.gtype.Type
+import org.mixql.core.engine.Engine
+import org.mixql.protobuf.ProtoBufConverter
+import org.mixql.protobuf.messages.clientMsgs
+import org.zeromq.{SocketType, ZMQ}
 
 import java.io.File
-import java.net.InetSocketAddress
-import java.net.SocketAddress
+import java.net.{InetSocketAddress, SocketAddress}
 import java.nio.channels.{ServerSocketChannel, SocketChannel}
-import org.zeromq.{SocketType, ZMQ}
-import org.mixql.protobuf.ProtoBufConverter
-import org.mixql.core.engine.Engine
-import org.mixql.protobuf.messages.clientMsgs
 
 
 class ClientModule(clientName: String, moduleName: String, startScriptName: String, host: String, portFrontend: Int,
@@ -47,8 +47,8 @@ class ClientModule(clientName: String, moduleName: String, startScriptName: Stri
   }
 
   override def isParam(name: String): Boolean = {
-    import org.mixql.protobuf.messages.clientMsgs
     import org.mixql.core.context.gtype
+    import org.mixql.protobuf.messages.clientMsgs
     sendMsg(clientMsgs.IsParam(name))
     RemoteMsgsConverter.toGtype(recvMsg()).asInstanceOf[gtype.bool].value
   }

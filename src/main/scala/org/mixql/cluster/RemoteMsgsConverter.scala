@@ -1,3 +1,4 @@
+package org.mixql.cluster
 import org.mixql.protobuf.messages.clientMsgs
 
 object RemoteMsgsConverter {

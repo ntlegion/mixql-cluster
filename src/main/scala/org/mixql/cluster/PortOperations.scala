@@ -1,3 +1,4 @@
+package org.mixql.cluster
 object PortOperations {
   import java.io.IOException
   import java.net.ServerSocket
