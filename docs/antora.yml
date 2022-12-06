@@ -1,0 +1,6 @@
+name: mixql-cluster
+title: MixQL Cluster
+version: master
+start_page: overview.adoc
+nav:
+  - modules/ROOT/nav.adoc
