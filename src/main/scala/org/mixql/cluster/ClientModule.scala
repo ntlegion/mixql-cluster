@@ -23,12 +23,15 @@ class ClientModule(clientName: String, moduleName: String, startScriptName: Stri
 
   override def execute(stmt: String): Type = {
     import org.mixql.protobuf.messages.clientMsgs
+    import org.mixql.protobuf.RemoteMsgsConverter
     sendMsg(clientMsgs.Execute(stmt))
     RemoteMsgsConverter.toGtype(recvMsg())
   }
 
   override def setParam(name: String, value: Type): Unit = {
     import org.mixql.protobuf.messages.clientMsgs
+    import org.mixql.protobuf.RemoteMsgsConverter
+
     sendMsg(clientMsgs.SetParam(name, Some(
       com.google.protobuf.any.Any.pack(RemoteMsgsConverter.toAnyMessage(value))
     )))
@@ -42,6 +45,8 @@ class ClientModule(clientName: String, moduleName: String, startScriptName: Stri
 
   override def getParam(name: String): Type = {
     import org.mixql.protobuf.messages.clientMsgs
+    import org.mixql.protobuf.RemoteMsgsConverter
+
     sendMsg(clientMsgs.GetParam(name))
     RemoteMsgsConverter.toGtype(recvMsg())
   }
@@ -49,6 +54,8 @@ class ClientModule(clientName: String, moduleName: String, startScriptName: Stri
   override def isParam(name: String): Boolean = {
     import org.mixql.core.context.gtype
     import org.mixql.protobuf.messages.clientMsgs
+    import org.mixql.protobuf.RemoteMsgsConverter
+    
     sendMsg(clientMsgs.IsParam(name))
     RemoteMsgsConverter.toGtype(recvMsg()).asInstanceOf[gtype.bool].value
   }
