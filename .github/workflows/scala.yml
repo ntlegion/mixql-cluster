@@ -1,4 +1,4 @@
-sbt name: Scala CI
+name: Scala CI
 jobs:
   test:
     runs-on: ubuntu-latest
