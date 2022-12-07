@@ -1,6 +1,9 @@
 name: mixql-cluster
 title: MixQL Cluster
-version: master
-start_page: overview.adoc
+version: 'v0.1.0'
+prerelease: -alpha.1
+#display_version: '0.1.0 Spiny'
+#prerelease: false
+start_page: index.adoc
 nav:
   - modules/ROOT/nav.adoc
