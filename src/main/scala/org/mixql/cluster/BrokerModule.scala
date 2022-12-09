@@ -140,17 +140,39 @@ class BrokerMainRunnable(
       case e: Throwable =>
         println("Broker main thread: Got Exception: " + e.getMessage)
     } finally {
-      if (backend != null) {
-        println("Broker: closing backend")
-        backend.close()
+      try {
+        if (backend != null) {
+          println("Broker: closing backend")
+          backend.close()
+        }
+      } catch {
+        case e: Throwable =>
+          println(
+            "Warning error while closing backend socket in broker: " + e.getMessage
+          )
       }
-      if frontend != null then
-        println("Broker: closing frontend")
-        frontend.close()
 
-      if poller != null then {
-        println("Broker: close poll")
-        poller.close()
+      try {
+        if frontend != null then
+          println("Broker: closing frontend")
+          frontend.close()
+      } catch {
+        case e: Throwable =>
+          println(
+            "Warning error while closing frontend socket in broker: " + e.getMessage
+          )
+      }
+
+      try {
+        if poller != null then {
+          println("Broker: close poll")
+          poller.close()
+        }
+      } catch {
+        case e: Throwable =>
+          println(
+            "Warning error while closing poller in broker: " + e.getMessage
+          )
       }
 
       try {

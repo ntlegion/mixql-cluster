@@ -9,22 +9,29 @@ import org.zeromq.{SocketType, ZMQ}
 import java.io.File
 import java.net.{InetSocketAddress, SocketAddress}
 import java.nio.channels.{ServerSocketChannel, SocketChannel}
+import scala.concurrent.Future
 
+//if start script name is not none then client must start remote engine by executing script
+//which is {basePath}/{startScriptName}. P.S executor will be ignored
+//if executor is not none and startScriptName is none then execute it in scala future
+//if executor is none and startScript is none then just connect
 class ClientModule(
   clientName: String,
   moduleName: String,
-  startScriptName: String,
+  startScriptName: Option[String],
+  executor: Option[IExecutor],
   host: String,
   portFrontend: Int,
   portBackend: Int,
-  basePath: File,
-  broker: BrokerModule
+  basePath: File
 ) extends Engine
     with java.lang.AutoCloseable {
   var client: ZMQ.Socket = null
   var ctx: ZMQ.Context = null
 
   var clientRemoteProcess: sys.process.Process = null
+  var clientFuture: Future[Unit] = null
+  var started: Boolean = false
 
   override def name: String = clientName
 
@@ -77,7 +84,7 @@ class ClientModule(
   }
 
   def sendMsg(msg: scalapb.GeneratedMessage): Unit = {
-    if clientRemoteProcess == null then
+    if !started then
       startModuleClient()
       ctx = ZMQ.context(1)
       client = ctx.socket(SocketType.REQ)
@@ -88,6 +95,7 @@ class ClientModule(
           s"tcp://$host:$portFrontend " + client
             .connect(s"tcp://$host:$portFrontend")
       )
+      started = true
     end if
     println(
       "server: Clientmodule " + clientName + " sending identity of remote module " + moduleName + " " +
@@ -108,19 +116,31 @@ class ClientModule(
   }
 
   def startModuleClient() = {
-    println(
-      s"server: ClientModule: $clientName trying to  start module $moduleName at " + host +
-        " and port at " + portBackend + " in " + basePath.getAbsolutePath
-    )
-    clientRemoteProcess = CmdOperations.runCmdNoWait(
-      Some(
-        s"$startScriptName.bat --port $portBackend --host $host --identity $moduleName"
-      ),
-      Some(
-        s"$startScriptName --port $portBackend --host $host --identity $moduleName"
-      ),
-      basePath
-    )
+    startScriptName match
+      case Some(scriptName) =>
+        println(
+          s"server: ClientModule: $clientName trying to  start remote module $moduleName at " + host +
+            " and port at " + portBackend + " in " + basePath.getAbsolutePath + " by executing script " +
+            scriptName + " in directory " + basePath.getAbsolutePath
+        )
+        clientRemoteProcess = CmdOperations.runCmdNoWait(
+          Some(
+            s"$scriptName.bat --port $portBackend --host $host --identity $moduleName"
+          ),
+          Some(
+            s"$scriptName --port $portBackend --host $host --identity $moduleName"
+          ),
+          basePath
+        )
+      case None =>
+        executor match
+          case Some(engine) =>
+            println(
+              s"server: ClientModule: $clientName trying to  start module $moduleName at " + host +
+                " and port at " + portBackend + " in " + basePath.getAbsolutePath + " by executing in scala future"
+            )
+            clientFuture = engine.start(moduleName, host, portBackend.toString)
+          case None =>
   }
 
   override def close() = {
