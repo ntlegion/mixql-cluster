@@ -1,9 +1,9 @@
 = Overview
 :navtitle: Overview
 :keywords: sql, engine, spark, protobuf
-:description: Protobuf desc
+:description: MixQL Cluster desc
 
-== Text
+== {description}
 ////
 This is the start page of project's documentation, and therefore likely the first thing people read.
 
